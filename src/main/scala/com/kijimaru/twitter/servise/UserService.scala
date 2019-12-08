@@ -24,6 +24,10 @@ class UserService @Inject()(
     }
   }
 
+  def authenticate(rawPassword: String, hashedPassword: String): Boolean = {
+    rawPassword.bcrypt == hashedPassword
+  }
+
 }
 
 object UserService {
