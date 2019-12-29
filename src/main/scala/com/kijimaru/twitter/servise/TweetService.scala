@@ -9,6 +9,8 @@ import com.kijimaru.twitter.domain.repository.{
   UserRepository,
   ProfileRepository
 }
+import com.kijimaru.twitter.domain.repository.TweetRepository.CreateTweetRequest
+import com.kijimaru.twitter.domain.master.ContentType
 
 class TweetService @Inject()(
   tweetRepository: TweetRepository,
@@ -23,11 +25,12 @@ class TweetService @Inject()(
   def tweet(userId: Long, text: String, content: Option[String]): String = {
 
     def createUser(user: User, profile: Profile): Unit = {
-      tweetRepository.create(
+      tweetRepository.create(CreateTweetRequest(
         userId,
         text,
+        ContentType.Empty, // TODO
         content.getOrElse("")
-      )
+      ))
     }
 
     val result = for {

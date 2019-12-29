@@ -15,9 +15,13 @@ trait UserRepository {
 
   def findByToken(token: String): Option[User]
 
+  def getAll(): List[User]
+
   def update(request: UpdateUserRequest): Try[Unit]
 
   def authenticate(email: String, rawPassword: String): Either[String, Boolean]
+
+  def setToken(userId: Long, token: String): Unit
 
 }
 

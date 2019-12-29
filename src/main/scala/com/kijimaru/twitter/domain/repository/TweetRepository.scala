@@ -11,7 +11,6 @@ trait TweetRepository {
 
   def create(request: CreateTweetRequest): Try[Long]
 
-
   def findById(id: Long): Option[Tweet]
 
   def findByUser(userId: Long, offset: Int): Option[Tweet]

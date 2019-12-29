@@ -16,8 +16,8 @@ class TimelineController @Inject()(
   get("/user/:id/timeline") { request: Request =>
     val userId = request.getLongParam("id")
     val offset = Option(request.getIntParam("offset"))
-    val tweets = tweetRepository.findByFollowing(userId, offset.getOrElse(0))
-    val retweets = retweetRepository.findByFollowing(userId, offset.getOrElse(0))
+    val tweets = tweetRepository.findByFollow(userId, offset.getOrElse(0))
+    val retweets = retweetRepository.findByFollow(userId, offset.getOrElse(0))
     Map(
       "tweets" -> tweets,
       "retweets" -> retweets.map(i => Map(

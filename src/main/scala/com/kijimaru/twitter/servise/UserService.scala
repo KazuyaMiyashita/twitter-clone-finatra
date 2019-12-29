@@ -18,7 +18,7 @@ class UserService @Inject()(
       _ <- Either.cond(password.bcrypt == user.password, (), "invalid password") // FIXME: seed欲しい
     } yield {
       //100文字のランダムな文字列
-      val token = scala.util.Random.alphanumeric.take(100).mkString
+      val token: String = scala.util.Random.alphanumeric.take(100).mkString
       userRepository.setToken(user.id, token)
       Login(user.id, token, new Timestamp(System.currentTimeMillis()))
     }
