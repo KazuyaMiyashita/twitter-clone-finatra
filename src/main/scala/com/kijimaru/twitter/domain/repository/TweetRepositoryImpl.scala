@@ -18,11 +18,10 @@ class TweetRepositoryImpl @Inject()(ctx: DBContext) extends TweetRepository {
   override def create(request: CreateTweetRequest): Try[Long] = Try {
     run(
       quote {
-        query[TweetRecord]
+        querySchema[TweetRecord]("tweet")
           .insert(
             _.userId -> lift(request.userId),
-            _.text -> lift(request.text),
-            _.contentUrl -> lift(request.contentUrl)
+            _.text -> lift(request.text)
           )
           .returningGenerated(_.id)
       }
@@ -32,7 +31,7 @@ class TweetRepositoryImpl @Inject()(ctx: DBContext) extends TweetRepository {
   override def findById(id: Long): Option[Tweet] = {
     val record: Option[(TweetRecord, ProfileRecord)] = run {
       quote {
-        querySchema[TweetRecord]("tweets")
+        querySchema[TweetRecord]("tweet")
           .filter(_.id == lift(id))
           .join(querySchema[ProfileRecord]("profile"))
             .on((t, p) => t.userId == p.userId)
@@ -76,7 +75,6 @@ object TweetRepositoryImpl {
     id: Long,
     userId: Long,
     text: String,
-    contentUrl: String,
     createdAt: LocalDateTime
   )
 
@@ -94,7 +92,7 @@ object TweetRepositoryImpl {
     userIcon = profile.icon,
     text = tweet.text,
     contentType = ContentType.Empty, // TODO
-    contentUrl = tweet.contentUrl,
+    contentUrl = "", // TODO
     createdAt = tweet.createdAt,
   )
 

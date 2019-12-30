@@ -3,6 +3,7 @@ lazy val root = (project in file(".")).
     name := "twitter-clone",
     scalaVersion := "2.12.8",
     libraryDependencies ++= dervy,
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % Test,
     resolvers ++= resolve
   )
 
