@@ -18,11 +18,11 @@ class UserRepositoryImpl @Inject()(
       quote {
         query[User]
           .insert(
-            _.screenName -> request.screenName,
-            _.email -> request.email,
-            _.password -> request.hashedPassword
+            _.screenName -> lift(request.screenName),
+            _.email -> lift(request.email),
+            _.password -> lift(request.hashedPassword)
           )
-          .returning(_.id)
+          .returningGenerated(_.id)
       }
     )
   }
@@ -66,17 +66,38 @@ class UserRepositoryImpl @Inject()(
     ).headOption
   }
 
+  override def getAll(): List[User] = {
+    run(
+      quote {
+        query[User]
+      }
+    )
+  }
+
   override def update(request: UpdateUserRequest): Try[Unit] = Try {
     run(
       quote {
         query[User]
           .filter(_.id == lift(request.id))
           .update(
-            _.screenName -> request.screenName,
-            _.email -> request.email,
-            _.password -> request.hashedPassword,
+            _.screenName -> lift(request.screenName),
+            _.email -> lift(request.email),
+            _.password -> lift(request.hashedPassword),
           )
       }
     )
   }
+
+  override def setToken(userId: Long, token: String): Try[Unit] = Try {
+    run(
+      quote {
+        query[User]
+          .filter(_.id == lift(userId))
+          .update(
+            _.token -> lift(token),
+          )
+      }
+    )
+  }
+
 }

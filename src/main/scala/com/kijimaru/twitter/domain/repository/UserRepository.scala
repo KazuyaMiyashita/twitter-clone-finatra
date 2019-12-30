@@ -21,7 +21,7 @@ trait UserRepository {
 
   def authenticate(email: String, rawPassword: String): Either[String, Boolean]
 
-  def setToken(userId: Long, token: String): Unit
+  def setToken(userId: Long, token: String): Try[Unit]
 
 }
 

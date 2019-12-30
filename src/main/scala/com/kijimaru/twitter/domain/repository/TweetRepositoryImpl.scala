@@ -15,8 +15,18 @@ class TweetRepositoryImpl @Inject()(ctx: DBContext) extends TweetRepository {
   import TweetRepositoryImpl._
   import ctx._
 
-  override def create(request: CreateTweetRequest): Unit = Try {
-
+  override def create(request: CreateTweetRequest): Try[Long] = Try {
+    run(
+      quote {
+        query[TweetRecord]
+          .insert(
+            _.userId -> lift(request.userId),
+            _.text -> lift(request.text),
+            _.contentUrl -> lift(request.contentUrl)
+          )
+          .returningGenerated(_.id)
+      }
+    )
   }
 
   override def findById(id: Long): Option[Tweet] = {
@@ -30,6 +40,8 @@ class TweetRepositoryImpl @Inject()(ctx: DBContext) extends TweetRepository {
     }.headOption
     record.map(r => createTweetEntity(r._1, r._2))
   }
+
+  override def findByUser(userId: Long, offset: Int): Option[Tweet] = ???
 
   override def findByFollow(userId: Long, offset: Int): List[Tweet] = {
     val record: List[(TweetRecord, ProfileRecord)] = run {
@@ -48,6 +60,14 @@ class TweetRepositoryImpl @Inject()(ctx: DBContext) extends TweetRepository {
     }
     record.map(r => createTweetEntity(r._1, r._2))
   }
+
+  override def findTimeline(userId: Long): Try[List[Tweet]] = ???
+
+  override def like(id: Long): Either[String, Unit] = ???
+
+  override def retweet(id: Long): Either[String, Unit] = ???
+
+  override def seed(): Unit = ???
 }
 
 object TweetRepositoryImpl {

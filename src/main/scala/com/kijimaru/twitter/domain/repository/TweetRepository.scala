@@ -17,11 +17,11 @@ trait TweetRepository {
 
   def findByFollow(userId: Long, offset: Int): List[Tweet]
 
-  def findTimeline(userId: Long): Either[String, List[Tweet]]
+  def findTimeline(userId: Long): Try[List[Tweet]]
 
-  def like(id: Long): Either[String, Boolean]
+  def like(id: Long): Either[String, Unit]
 
-  def retweet(id: Long): Either[String, Boolean]
+  def retweet(id: Long): Either[String, Unit]
 
   def seed(): Unit
 
